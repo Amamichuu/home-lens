@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.routers.apartments import router as apartment_router
+
 app = FastAPI(
     title="HomeLens API",
     description="Backend API for HomeLens.",
@@ -7,6 +9,9 @@ app = FastAPI(
 )
 
 
-@app.get("/health", tags=["Health"])
-async def health() -> dict[str, str]:
+@app.get("/health")
+def health():
     return {"status": "ok"}
+
+
+app.include_router(apartment_router)
