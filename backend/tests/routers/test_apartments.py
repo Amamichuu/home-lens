@@ -1,13 +1,18 @@
 from fastapi.testclient import TestClient
+from sqlalchemy import delete
 
+from app.db.session import SessionLocal
 from app.main import app
-from app.storage import apartments
+from app.models.apartment import Apartment
 
 client = TestClient(app)
 
 
 def setup_function():
-    apartments.clear()
+    db = SessionLocal()
+    db.execute(delete(Apartment))
+    db.commit()
+    db.close()
 
 
 def test_should_create_apartment():
@@ -20,6 +25,7 @@ def test_should_create_apartment():
     response = client.post("/apartments/", json=apartment_data)
 
     assert response.status_code == 201
+    assert response.json()["id"] > 0
     assert response.json()["title"] == apartment_data["title"]
     assert response.json()["price"] == apartment_data["price"]
     assert response.json()["location"] == apartment_data["location"]

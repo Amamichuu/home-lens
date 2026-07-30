@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: homelens-postgres
+    environment:
+      POSTGRES_USER: homelens
+      POSTGRES_PASSWORD: homelens
+      POSTGRES_DB: homelens
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

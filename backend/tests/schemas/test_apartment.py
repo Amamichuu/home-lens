@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.apartment import Apartment
+from app.schemas.apartment import ApartmentCreate
 
 
 def test_should_create_apartment():
@@ -13,7 +13,7 @@ def test_should_create_apartment():
     }
 
     # Act
-    apartment = Apartment(**apartment_data)
+    apartment = ApartmentCreate(**apartment_data)
 
     # Assert
     assert apartment.title == "Nice apartment"
@@ -23,4 +23,4 @@ def test_should_create_apartment():
 
 def test_apartment_requires_basic_information():
     with pytest.raises(ValidationError):
-        Apartment()
+        ApartmentCreate()
