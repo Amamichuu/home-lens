@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class Apartment(BaseModel):
+class ApartmentBase(BaseModel):
     title: str = Field(description="Apartment title or name")
     price: float = Field(description="Monthly rent price")
     location: str = Field(description="Apartment location")
@@ -30,3 +30,13 @@ class Apartment(BaseModel):
         default=None,
         description="Personal notes about the apartment",
     )
+
+
+class ApartmentCreate(ApartmentBase):
+    pass
+
+
+class ApartmentResponse(ApartmentBase):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)

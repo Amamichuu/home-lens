@@ -1,17 +1,26 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-from app.schemas.apartment import Apartment
-from app.storage import apartments
+from app.crud import apartment as crud
+from app.dependencies import get_db
+from app.schemas.apartment import ApartmentCreate, ApartmentResponse
 
-router = APIRouter(prefix="/apartments", tags=["Apartments"])
+router = APIRouter(
+    prefix="/apartments",
+    tags=["Apartments"],
+)
 
 
-@router.get("/", response_model=list[Apartment])
-def list_apartments() -> list[Apartment]:
-    return apartments
+@router.get("/", response_model=list[ApartmentResponse])
+def list_apartments(
+    db: Session = Depends(get_db),
+) -> list[ApartmentResponse]:
+    return crud.get_apartments(db)
 
 
-@router.post("/", response_model=Apartment, status_code=201)
-def create_apartment(apartment: Apartment) -> Apartment:
-    apartments.append(apartment)
-    return apartment
+@router.post("/", response_model=ApartmentResponse, status_code=201)
+def create_apartment(
+    apartment: ApartmentCreate,
+    db: Session = Depends(get_db),
+) -> ApartmentResponse:
+    return crud.create_apartment(db, apartment)
